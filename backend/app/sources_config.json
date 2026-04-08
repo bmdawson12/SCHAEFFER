@@ -1,0 +1,318 @@
+{
+  "sources": [
+    {
+      "name": "Congressional Budget Office",
+      "url": "https://www.cbo.gov/about/news-releases/rss",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "pdf_extract": true }
+    },
+    {
+      "name": "Government Accountability Office",
+      "url": "https://www.gao.gov/rss/reports.xml",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "pdf_extract": true }
+    },
+    {
+      "name": "Food and Drug Administration",
+      "url": "https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/press-announcements/rss.xml",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "pdf_extract": false }
+    },
+    {
+      "name": "Federal Trade Commission",
+      "url": "https://www.ftc.gov/feeds/press-release.rss",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {}
+    },
+    {
+      "name": "Department of Health and Human Services",
+      "url": "https://www.hhs.gov/rss/newsroom.xml",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {}
+    },
+    {
+      "name": "Department of Treasury",
+      "url": "https://home.treasury.gov/news/press-releases",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {
+        "link_selector": "article h3 a, .news-item a",
+        "pdf_extract": true
+      }
+    },
+    {
+      "name": "Internal Revenue Service",
+      "url": "https://www.irs.gov/newsroom/news-releases-for-current-month",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "link_selector": ".newsroom-news-release a" }
+    },
+    {
+      "name": "National Institute on Aging",
+      "url": "https://www.nia.nih.gov/news/rss.xml",
+      "source_type": "rss",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {}
+    },
+    {
+      "name": "National Academy of Medicine",
+      "url": "https://nam.edu/publications/",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {
+        "link_selector": ".publications-list a, .report-card a",
+        "pdf_extract": true
+      }
+    },
+    {
+      "name": "National Academy of Sciences",
+      "url": "https://www.nasonline.org/publications/",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "link_selector": ".pub-list a" }
+    },
+    {
+      "name": "MedPAC",
+      "url": "https://www.medpac.gov/reports/",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {
+        "link_selector": ".report-list a, h3 a",
+        "pdf_extract": true
+      }
+    },
+    {
+      "name": "Council of Economic Advisers / White House",
+      "url": "https://www.whitehouse.gov/cea/written-materials/",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": {
+        "link_selector": "article a, .briefing-room-listing a",
+        "pdf_extract": true
+      }
+    },
+    {
+      "name": "House Committee on Energy and Commerce",
+      "url": "https://energycommerce.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release-list a, h3 a, h2 a" }
+    },
+    {
+      "name": "House Committee on the Judiciary",
+      "url": "https://judiciary.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release a, article a" }
+    },
+    {
+      "name": "House Diabetes Caucus",
+      "url": "https://diabetescaucus-degette.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "House Financial Services Committee",
+      "url": "https://financialservices.house.gov/news/documentquery.aspx?DocumentTypeID=2",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".news-list a, li a" }
+    },
+    {
+      "name": "House Joint Economic Committee",
+      "url": "https://www.jec.senate.gov/public/index.cfm/press-releases",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release-list a" }
+    },
+    {
+      "name": "House Oversight Committee",
+      "url": "https://oversight.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article h3 a, .news-item a" }
+    },
+    {
+      "name": "House Ways and Means Committee",
+      "url": "https://waysandmeans.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "Senate Appropriations Committee",
+      "url": "https://www.appropriations.senate.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".news-list a, article a" }
+    },
+    {
+      "name": "Senate Budget Committee",
+      "url": "https://www.budget.senate.gov/chairman/newsroom/press",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "Senate Commerce Committee",
+      "url": "https://www.commerce.senate.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release a, article a" }
+    },
+    {
+      "name": "Senate HELP Committee",
+      "url": "https://www.help.senate.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release a, article a" }
+    },
+    {
+      "name": "Senate Finance Committee",
+      "url": "https://www.finance.senate.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release a, article a" }
+    },
+    {
+      "name": "Senate Judiciary Committee",
+      "url": "https://www.judiciary.senate.gov/press",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "Senate Special Committee on Aging",
+      "url": "https://www.aging.senate.gov/press-releases",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": ".press-release a, article a" }
+    },
+    {
+      "name": "Senate Finance Committee — Minority Staff",
+      "url": "https://www.finance.senate.gov/ranking-members-news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "House Republican Oversight",
+      "url": "https://oversight.house.gov/release",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "Office of Congressman James Comer",
+      "url": "https://comer.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "Office of Congresswoman Katie Porter",
+      "url": "https://porter.house.gov/news",
+      "source_type": "scrape",
+      "agency_group": "congressional",
+      "enabled": true,
+      "config": { "link_selector": "article a, h3 a" }
+    },
+    {
+      "name": "California Legislature",
+      "url": "https://leginfo.legislature.ca.gov/faces/billSearchClient.xhtml",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": { "link_selector": "a[href*='billText']" }
+    },
+    {
+      "name": "California Health Benefits Review Program",
+      "url": "https://chbrp.ucdavis.edu/publications/",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": {
+        "link_selector": ".publications a, table a",
+        "pdf_extract": true
+      }
+    },
+    {
+      "name": "LA County Public Health",
+      "url": "http://publichealth.lacounty.gov/media/news/",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": { "link_selector": ".news-list a, article a" }
+    },
+    {
+      "name": "Delaware Senate",
+      "url": "https://legis.delaware.gov/BillDetail",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": { "link_selector": "a[href*='pdf'], a[href*='bill']" }
+    },
+    {
+      "name": "State of Illinois",
+      "url": "https://www.illinois.gov/news",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": { "link_selector": "article a, .news-item a" }
+    },
+    {
+      "name": "State of New Hampshire",
+      "url": "https://www.nh.gov/news/",
+      "source_type": "scrape",
+      "agency_group": "state",
+      "enabled": true,
+      "config": { "link_selector": "article a, .news-release a" }
+    },
+    {
+      "name": "American Association for the Study of Liver Diseases",
+      "url": "https://www.aasld.org/publications",
+      "source_type": "scrape",
+      "agency_group": "medical",
+      "enabled": true,
+      "config": {
+        "link_selector": ".publications-list a, article a",
+        "pdf_extract": true
+      }
+    }
+  ]
+}

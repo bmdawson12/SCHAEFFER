@@ -44,6 +44,7 @@ class ReviewQueueItem(Base):
     publisher = Column(String(500), nullable=True)
     link = Column(Text, nullable=True)
     # Detection metadata
+    person_id = Column(Integer, ForeignKey("people.id"), nullable=True)  # links to the matched Person
     matched_text = Column(Text, nullable=True)
     confidence_score = Column(Float, nullable=True)
     source_id = Column(Integer, ForeignKey("sources.id"), nullable=True)

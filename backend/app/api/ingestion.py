@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from typing import List
 import asyncio
 
 from ..database import get_db, AsyncSessionLocal
@@ -42,7 +43,7 @@ async def ingestion_status():
     return {"running": _running}
 
 
-@router.get("/logs", response_model=list[IngestionLogOut])
+@router.get("/logs", response_model=List[IngestionLogOut])
 async def get_ingestion_logs(db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(IngestionLog).order_by(IngestionLog.started_at.desc()).limit(100)

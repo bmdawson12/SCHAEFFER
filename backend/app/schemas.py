@@ -64,6 +64,7 @@ class ReviewQueueItemOut(BaseModel):
     year_of_government_publication: Optional[int] = None
     publisher: Optional[str] = None
     link: Optional[str] = None
+    person_id: Optional[int] = None
     matched_text: Optional[str] = None
     confidence_score: Optional[float] = None
     source_id: Optional[int] = None

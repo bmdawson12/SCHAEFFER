@@ -12,7 +12,13 @@ MAX_PDF_BYTES = 50 * 1024 * 1024  # 50 MB cap
 async def extract_text_from_pdf(url: str) -> Optional[str]:
     """Download a PDF from the given URL and extract its full text."""
     try:
-        async with httpx.AsyncClient(timeout=60, follow_redirects=True) as client:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            )
+        }
+        async with httpx.AsyncClient(timeout=60, follow_redirects=True, headers=headers) as client:
             resp = await client.get(url)
             resp.raise_for_status()
             if len(resp.content) > MAX_PDF_BYTES:

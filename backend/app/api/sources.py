@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from typing import List
 
 from ..database import get_db
 from ..models import Source
@@ -9,7 +10,7 @@ from ..schemas import SourceCreate, SourceUpdate, SourceOut
 router = APIRouter()
 
 
-@router.get("/", response_model=list[SourceOut])
+@router.get("/", response_model=List[SourceOut])
 async def list_sources(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Source).order_by(Source.agency_group, Source.name))
     return result.scalars().all()

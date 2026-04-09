@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from typing import List
 import csv
 import io
 
@@ -11,7 +12,7 @@ from ..schemas import PersonCreate, PersonUpdate, PersonOut
 router = APIRouter()
 
 
-@router.get("/", response_model=list[PersonOut])
+@router.get("/", response_model=List[PersonOut])
 async def list_people(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Person).order_by(Person.full_name))
     return result.scalars().all()

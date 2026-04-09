@@ -2,11 +2,11 @@
   "sources": [
     {
       "name": "Congressional Budget Office",
-      "url": "https://www.cbo.gov/about/news-releases/rss",
-      "source_type": "rss",
+      "url": "https://www.cbo.gov/publications",
+      "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
-      "config": { "pdf_extract": true }
+      "config": { "link_selector": "a[href]" }
     },
     {
       "name": "Government Accountability Office",
@@ -18,24 +18,24 @@
     },
     {
       "name": "Food and Drug Administration",
-      "url": "https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/press-announcements/rss.xml",
-      "source_type": "rss",
+      "url": "https://www.fda.gov/news-events/fda-newsroom/press-announcements",
+      "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
       "config": { "pdf_extract": false }
     },
     {
       "name": "Federal Trade Commission",
-      "url": "https://www.ftc.gov/feeds/press-release.rss",
-      "source_type": "rss",
+      "url": "https://www.ftc.gov/reports",
+      "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
-      "config": {}
+      "config": { "link_selector": "a[href]" }
     },
     {
       "name": "Department of Health and Human Services",
-      "url": "https://www.hhs.gov/rss/newsroom.xml",
-      "source_type": "rss",
+      "url": "https://aspe.hhs.gov/reports",
+      "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
       "config": {}
@@ -88,25 +88,19 @@
     },
     {
       "name": "MedPAC",
-      "url": "https://www.medpac.gov/reports/",
+      "url": "https://www.medpac.gov/",
       "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
-      "config": {
-        "link_selector": ".report-list a, h3 a",
-        "pdf_extract": true
-      }
+      "config": { "link_selector": "a[href]" }
     },
     {
       "name": "Council of Economic Advisers / White House",
-      "url": "https://www.whitehouse.gov/cea/written-materials/",
+      "url": "https://www.whitehouse.gov/cea/",
       "source_type": "scrape",
       "agency_group": "federal",
       "enabled": true,
-      "config": {
-        "link_selector": "article a, .briefing-room-listing a",
-        "pdf_extract": true
-      }
+      "config": { "link_selector": "a[href]" }
     },
     {
       "name": "House Committee on Energy and Commerce",
@@ -126,7 +120,7 @@
     },
     {
       "name": "House Diabetes Caucus",
-      "url": "https://diabetescaucus-degette.house.gov/news",
+      "url": "https://diabetescaucus-degette.house.gov/",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -166,7 +160,7 @@
     },
     {
       "name": "Senate Appropriations Committee",
-      "url": "https://www.appropriations.senate.gov/news",
+      "url": "https://www.appropriations.senate.gov/hearings",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -182,7 +176,7 @@
     },
     {
       "name": "Senate Commerce Committee",
-      "url": "https://www.commerce.senate.gov/news",
+      "url": "https://www.commerce.senate.gov/hearings",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -190,7 +184,7 @@
     },
     {
       "name": "Senate HELP Committee",
-      "url": "https://www.help.senate.gov/news",
+      "url": "https://www.help.senate.gov/hearings",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -198,7 +192,7 @@
     },
     {
       "name": "Senate Finance Committee",
-      "url": "https://www.finance.senate.gov/news",
+      "url": "https://www.finance.senate.gov/hearings",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -214,7 +208,7 @@
     },
     {
       "name": "Senate Special Committee on Aging",
-      "url": "https://www.aging.senate.gov/press-releases",
+      "url": "https://www.aging.senate.gov/hearings",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -238,7 +232,7 @@
     },
     {
       "name": "Office of Congressman James Comer",
-      "url": "https://comer.house.gov/news",
+      "url": "https://comer.house.gov/",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -246,7 +240,7 @@
     },
     {
       "name": "Office of Congresswoman Katie Porter",
-      "url": "https://porter.house.gov/news",
+      "url": "https://porter.house.gov/",
       "source_type": "scrape",
       "agency_group": "congressional",
       "enabled": true,
@@ -262,7 +256,7 @@
     },
     {
       "name": "California Health Benefits Review Program",
-      "url": "https://chbrp.ucdavis.edu/publications/",
+      "url": "https://healthpolicy.usc.edu/",
       "source_type": "scrape",
       "agency_group": "state",
       "enabled": true,
@@ -304,8 +298,24 @@
       "config": { "link_selector": "article a, .news-release a" }
     },
     {
+      "name": "Centers for Medicare & Medicaid Services",
+      "url": "https://www.cms.gov/newsroom/press-releases",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": true,
+      "config": { "link_selector": "a[href]" }
+    },
+    {
+      "name": "Regulations.gov Public Comments",
+      "url": "https://www.regulations.gov/",
+      "source_type": "scrape",
+      "agency_group": "federal",
+      "enabled": false,
+      "config": { "link_selector": "a[href]" }
+    },
+    {
       "name": "American Association for the Study of Liver Diseases",
-      "url": "https://www.aasld.org/publications",
+      "url": "https://www.aasld.org/",
       "source_type": "scrape",
       "agency_group": "medical",
       "enabled": true,

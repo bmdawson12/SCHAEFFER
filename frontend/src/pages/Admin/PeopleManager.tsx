@@ -159,7 +159,11 @@ export default function PeopleManager() {
           </div>
         </div>
         <div className="flex gap-2 mt-4">
+<<<<<<< HEAD
           <button onClick={save} className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded hover:bg-blue-700">
+=======
+          <button onClick={save} className="bg-[#990000] text-white text-sm px-4 py-1.5 rounded hover:bg-[#7a0000]">
+>>>>>>> f3759bd (initial commit)
             {editingId ? 'Update' : 'Add Person'}
           </button>
           {editingId && (

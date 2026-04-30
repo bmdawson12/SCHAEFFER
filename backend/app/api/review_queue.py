@@ -24,7 +24,11 @@ async def list_review_queue(
     count_result = await db.execute(select(func.count()).select_from(query.subquery()))
     total = count_result.scalar()
 
+<<<<<<< HEAD
     query = query.order_by(ReviewQueueItem.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+=======
+    query = query.order_by(ReviewQueueItem.confidence_score.desc().nullslast(), ReviewQueueItem.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+>>>>>>> f3759bd (initial commit)
     result = await db.execute(query)
     items = result.scalars().all()
 

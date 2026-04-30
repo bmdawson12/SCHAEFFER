@@ -163,9 +163,16 @@ INSTITUTION_SIGNALS = [
 def _validate_single_name_match(text_lower: str, match_idx: int, person: dict) -> tuple:
     """
     For single-word last name matches, look for corroborating evidence nearby:
+<<<<<<< HEAD
       - First name or initial within 100 chars
       - Institutional affiliation within 200 chars
       - "et al." within 30 chars after the name
+=======
+      - First name or initial within 150 chars
+      - "et al." within 40 chars after the name
+      - Year in parentheses within 20 chars (citation signal)
+      - Institutional affiliation within 400 chars
+>>>>>>> f3759bd (initial commit)
 
     Returns (is_valid: bool, reason: str).
     """
@@ -176,9 +183,15 @@ def _validate_single_name_match(text_lower: str, match_idx: int, person: dict) -
     first = parts[0].lower()
     first_initial = first[0]
 
+<<<<<<< HEAD
     # Check a window of 100 chars before and after the match
     window_start = max(0, match_idx - 100)
     window_end = min(len(text_lower), match_idx + 100)
+=======
+    # Check a window of 150 chars before and after the match
+    window_start = max(0, match_idx - 150)
+    window_end = min(len(text_lower), match_idx + 150)
+>>>>>>> f3759bd (initial commit)
     nearby = text_lower[window_start:window_end]
 
     # Check for first name nearby (e.g. "Kosali" near "Simon")
@@ -189,6 +202,7 @@ def _validate_single_name_match(text_lower: str, match_idx: int, person: dict) -
     if re.search(r"\b" + re.escape(first_initial) + r"\.?\s", nearby):
         return True, "initial nearby"
 
+<<<<<<< HEAD
     # Check for "et al." right after the name (within 30 chars)
     after_name = text_lower[match_idx:min(len(text_lower), match_idx + 40)]
     if re.search(r"\bet\s+al\.?", after_name):
@@ -197,6 +211,26 @@ def _validate_single_name_match(text_lower: str, match_idx: int, person: dict) -
     # Check for institutional signals in a wider window (200 chars)
     wide_start = max(0, match_idx - 200)
     wide_end = min(len(text_lower), match_idx + 200)
+=======
+    # Check for "et al." right after the name (within 40 chars)
+    after_name = text_lower[match_idx:min(len(text_lower), match_idx + 50)]
+    if re.search(r"\bet\s+al\.?", after_name):
+        return True, "et al."
+
+    # Check for year in parentheses — strong citation signal
+    # e.g. "Goldman (2019)" or "(Goldman, 2019)"
+    year_window = text_lower[max(0, match_idx - 20):min(len(text_lower), match_idx + 30)]
+    if re.search(r"\((?:19|20)\d{2}\)", year_window):
+        return True, "year in parens"
+
+    # Check for reference-list patterns nearby (e.g. comma-separated authors)
+    if re.search(r",\s*\w+\.\s*[&,]", nearby) or re.search(r"\bet\s+al", nearby):
+        return True, "reference list pattern"
+
+    # Check for institutional signals in a wider window (400 chars)
+    wide_start = max(0, match_idx - 400)
+    wide_end = min(len(text_lower), match_idx + 400)
+>>>>>>> f3759bd (initial commit)
     wide_nearby = text_lower[wide_start:wide_end]
     for pattern in INSTITUTION_SIGNALS:
         if re.search(pattern, wide_nearby):
@@ -304,8 +338,13 @@ def find_name_matches(text: str, people: List[dict]) -> List[Dict]:
                 continue
 
             words = text_lower.split()
+<<<<<<< HEAD
             # Slide a window of the same word count (+1 for flexibility)
             win_size = len(v_words) + 1
+=======
+            # Slide a window of the exact word count (no flexibility — reduces false positives)
+            win_size = len(v_words)
+>>>>>>> f3759bd (initial commit)
 
             for i in range(max(0, len(words) - len(v_words) + 1)):
                 window_str = " ".join(words[i : i + win_size])

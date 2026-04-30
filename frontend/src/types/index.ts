@@ -69,6 +69,16 @@ export interface PaginatedResponse<T> {
   items: T[]
 }
 
+<<<<<<< HEAD
+=======
+export interface LastIngestion {
+  completed_at: string | null
+  status: string
+  documents_checked: number
+  matches_found: number
+}
+
+>>>>>>> f3759bd (initial commit)
 export interface OverviewStats {
   total_citations: number
   pending_review: number
@@ -76,6 +86,10 @@ export interface OverviewStats {
   total_sources: number
   recent_citations: Citation[]
   top_faculty: { faculty: string; count: number }[]
+<<<<<<< HEAD
+=======
+  last_ingestion: LastIngestion | null
+>>>>>>> f3759bd (initial commit)
 }
 
 export interface CitationFilters {

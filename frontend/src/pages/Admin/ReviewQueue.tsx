@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { reviewQueueApi } from '../../api/client'
 import type { ReviewQueueItem, PaginatedResponse } from '../../types'
 import { format } from 'date-fns'
+=======
+import { useEffect, useState, useRef } from 'react'
+import toast from 'react-hot-toast'
+import { reviewQueueApi, statsApi } from '../../api/client'
+import type { ReviewQueueItem, PaginatedResponse } from '../../types'
+import { format } from 'date-fns'
+import { buildHighlightedUrl, openCitationLink } from '../../utils/linkUtils'
+>>>>>>> f3759bd (initial commit)
 
 const CITATION_TYPES = [
   'Journal Article', 'Working Paper', 'Report', 'Book', 'Book Chapter',
@@ -21,6 +30,45 @@ function Badge({ score }: { score?: number }) {
   return <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${color}`}>{score.toFixed(0)}%</span>
 }
 
+<<<<<<< HEAD
+=======
+function ComboInput({ value, onChange, options, placeholder, className }: {
+  value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; className?: string
+}) {
+  const [open, setOpen] = useState(false)
+  const [filter, setFilter] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const filtered = options.filter(o => o.toLowerCase().includes((filter || value || '').toLowerCase()))
+
+  return (
+    <div ref={ref} className="relative">
+      <input
+        className={className}
+        value={value}
+        placeholder={placeholder}
+        onChange={e => { onChange(e.target.value); setFilter(e.target.value); setOpen(true) }}
+        onFocus={() => setOpen(true)}
+      />
+      {open && filtered.length > 0 && (
+        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg max-h-40 overflow-y-auto">
+          {filtered.map(o => (
+            <button key={o} type="button" className="w-full text-left px-2 py-1.5 text-sm hover:bg-blue-50 truncate"
+              onClick={() => { onChange(o); setOpen(false) }}>{o}</button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+>>>>>>> f3759bd (initial commit)
 export default function ReviewQueue() {
   const [data, setData] = useState<PaginatedResponse<ReviewQueueItem> | null>(null)
   const [selected, setSelected] = useState<ReviewQueueItem | null>(null)
@@ -28,6 +76,10 @@ export default function ReviewQueue() {
   const [statusFilter, setStatusFilter] = useState('pending')
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
+<<<<<<< HEAD
+=======
+  const [existingTags, setExistingTags] = useState<string[]>([])
+>>>>>>> f3759bd (initial commit)
 
   function load(p = page, sf = statusFilter) {
     setLoading(true)
@@ -38,7 +90,14 @@ export default function ReviewQueue() {
       .finally(() => setLoading(false))
   }
 
+<<<<<<< HEAD
   useEffect(() => { load() }, [])
+=======
+  useEffect(() => {
+    load()
+    statsApi.filterOptions().then(r => setExistingTags(r.data.tags || [])).catch(() => {})
+  }, [])
+>>>>>>> f3759bd (initial commit)
 
   function select(item: ReviewQueueItem) {
     setSelected(item)
@@ -97,7 +156,14 @@ export default function ReviewQueue() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
+<<<<<<< HEAD
         <h1 className="text-xl font-semibold text-gray-900">Review Queue</h1>
+=======
+        <h1 className="text-xl font-semibold text-gray-900">
+            Review Queue
+            {data && <span className="text-sm font-normal text-gray-400 ml-2">({total} {statusFilter})</span>}
+          </h1>
+>>>>>>> f3759bd (initial commit)
         <div className="flex gap-2 items-center">
           <span className="text-sm text-gray-500">Show:</span>
           {['pending', 'approved', 'rejected'].map(s => (
@@ -105,7 +171,11 @@ export default function ReviewQueue() {
               key={s}
               onClick={() => { setStatusFilter(s); setPage(1); load(1, s) }}
               className={`text-sm px-3 py-1 rounded border ${
+<<<<<<< HEAD
                 statusFilter === s ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 hover:bg-gray-50'
+=======
+                statusFilter === s ? 'bg-[#990000] text-white border-[#990000]' : 'border-gray-200 hover:bg-gray-50'
+>>>>>>> f3759bd (initial commit)
               }`}
             >
               {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -119,7 +189,11 @@ export default function ReviewQueue() {
         <div className="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex justify-center py-16">
+<<<<<<< HEAD
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
+=======
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#990000]" />
+>>>>>>> f3759bd (initial commit)
             </div>
           ) : (
             <>
@@ -132,7 +206,11 @@ export default function ReviewQueue() {
                     key={item.id}
                     onClick={() => select(item)}
                     className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
+<<<<<<< HEAD
                       selected?.id === item.id ? 'bg-blue-50 border-l-2 border-blue-500' : ''
+=======
+                      selected?.id === item.id ? 'bg-red-50 border-l-2 border-[#990000]' : ''
+>>>>>>> f3759bd (initial commit)
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -142,7 +220,31 @@ export default function ReviewQueue() {
                     <p className="text-xs text-gray-500 mt-0.5 truncate">
                       {item.cited_in || item.link || 'Unknown document'}
                     </p>
+<<<<<<< HEAD
                     <p className="text-xs text-gray-400">{item.publisher} · {format(new Date(item.created_at), 'MMM d, yyyy')}</p>
+=======
+                    <div className="flex items-center justify-between mt-0.5">
+                      <p className="text-xs text-gray-400">{item.publisher} · {format(new Date(item.created_at), 'MMM d, yyyy')}</p>
+                      {item.link && (
+                        <a
+                          href={buildHighlightedUrl(item.link, item.faculty)}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            openCitationLink(item.link!, item.faculty).then(({ isPdf }) => {
+                              if (isPdf) toast('\ud83d\udccb "' + item.faculty + '" copied \u2014 press Ctrl+F in the PDF', { duration: 4000, icon: '\ud83d\udd0d' })
+                            })
+                          }}
+                          className="text-[10px] text-blue-500 hover:text-blue-700 hover:underline shrink-0"
+                          title="Open source document (highlights the citation)"
+                        >
+                          View source ↗
+                        </a>
+                      )}
+                    </div>
+>>>>>>> f3759bd (initial commit)
                   </button>
                 ))}
               </div>
@@ -152,7 +254,11 @@ export default function ReviewQueue() {
                     <button
                       key={p}
                       onClick={() => { setPage(p); load(p) }}
+<<<<<<< HEAD
                       className={`w-7 h-7 rounded text-xs ${p === page ? 'bg-blue-600 text-white' : 'border border-gray-200 hover:bg-gray-50'}`}
+=======
+                      className={`w-7 h-7 rounded text-xs ${p === page ? 'bg-[#990000] text-white' : 'border border-gray-200 hover:bg-gray-50'}`}
+>>>>>>> f3759bd (initial commit)
                     >
                       {p}
                     </button>
@@ -179,7 +285,23 @@ export default function ReviewQueue() {
             )}
 
             {selected.link && (
+<<<<<<< HEAD
               <a href={selected.link} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline break-all block">
+=======
+              <a
+                href={buildHighlightedUrl(selected.link, selected.faculty)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-blue-600 hover:underline break-all block"
+                title="Opens source and scrolls to the mention"
+                onClick={e => {
+                  e.preventDefault()
+                  openCitationLink(selected.link!, selected.faculty).then(({ isPdf }) => {
+                    if (isPdf) toast('\ud83d\udccb "' + selected.faculty + '" copied \u2014 press Ctrl+F in the PDF', { duration: 4000, icon: '\ud83d\udd0d' })
+                  })
+                }}
+              >
+>>>>>>> f3759bd (initial commit)
                 {selected.link}
               </a>
             )}
@@ -191,7 +313,11 @@ export default function ReviewQueue() {
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-500">Short Research Tag</label>
+<<<<<<< HEAD
                 <input className={inp} value={edits.short_research_tag ?? ''} onChange={e => setEdit('short_research_tag', e.target.value)} placeholder="e.g. Smith2022Pricing" />
+=======
+                <ComboInput className={inp} value={edits.short_research_tag ?? ''} onChange={v => setEdit('short_research_tag', v)} options={existingTags} placeholder="Type or select a tag…" />
+>>>>>>> f3759bd (initial commit)
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-500">Type</label>
@@ -234,7 +360,11 @@ export default function ReviewQueue() {
               <button onClick={reject} className="text-sm px-3 py-1.5 rounded bg-red-50 text-red-600 hover:bg-red-100">
                 Reject
               </button>
+<<<<<<< HEAD
               <button onClick={approve} className="flex-1 text-sm bg-blue-600 text-white rounded py-1.5 hover:bg-blue-700">
+=======
+              <button onClick={approve} className="flex-1 text-sm bg-[#990000] text-white rounded py-1.5 hover:bg-[#7a0000]">
+>>>>>>> f3759bd (initial commit)
                 Approve
               </button>
             </div>

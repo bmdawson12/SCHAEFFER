@@ -11,7 +11,23 @@ from ..ingestion import run_ingestion_pipeline
 
 router = APIRouter()
 
+<<<<<<< HEAD
 _running = False
+=======
+_progress = {
+    "running": False,
+    "phase": "",
+    "current_source": "",
+    "sources_done": 0,
+    "sources_total": 0,
+    "docs_checked": 0,
+    "matches_found": 0,
+}
+
+
+def _update_progress(**kwargs):
+    _progress.update(kwargs)
+>>>>>>> f3759bd (initial commit)
 
 
 @router.post("/run")
@@ -20,8 +36,12 @@ async def trigger_ingestion(
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
+<<<<<<< HEAD
     global _running
     if _running:
+=======
+    if _progress["running"]:
+>>>>>>> f3759bd (initial commit)
         return {"status": "already_running", "message": "Ingestion is already in progress"}
 
     background_tasks.add_task(run_ingestion_background, data.source_ids)
@@ -29,6 +49,7 @@ async def trigger_ingestion(
 
 
 async def run_ingestion_background(source_ids=None):
+<<<<<<< HEAD
     global _running
     _running = True
     try:
@@ -36,11 +57,24 @@ async def run_ingestion_background(source_ids=None):
             await run_ingestion_pipeline(db, source_ids)
     finally:
         _running = False
+=======
+    _progress.update(running=True, phase="starting", current_source="",
+                     sources_done=0, sources_total=0, docs_checked=0, matches_found=0)
+    try:
+        async with AsyncSessionLocal() as db:
+            await run_ingestion_pipeline(db, source_ids, progress_cb=_update_progress)
+    finally:
+        _progress.update(running=False, phase="done", current_source="")
+>>>>>>> f3759bd (initial commit)
 
 
 @router.get("/status")
 async def ingestion_status():
+<<<<<<< HEAD
     return {"running": _running}
+=======
+    return _progress
+>>>>>>> f3759bd (initial commit)
 
 
 @router.get("/logs", response_model=List[IngestionLogOut])

@@ -8,6 +8,10 @@ import ManualEntry from './pages/Admin/ManualEntry'
 import ReviewQueue from './pages/Admin/ReviewQueue'
 import PeopleManager from './pages/Admin/PeopleManager'
 import SourceManager from './pages/Admin/SourceManager'
+<<<<<<< HEAD
+=======
+import Intelligence from './pages/Admin/Intelligence'
+>>>>>>> f3759bd (initial commit)
 
 export default function App() {
   return (
@@ -22,6 +26,10 @@ export default function App() {
           <Route path="/admin/review-queue" element={<ReviewQueue />} />
           <Route path="/admin/people" element={<PeopleManager />} />
           <Route path="/admin/sources" element={<SourceManager />} />
+<<<<<<< HEAD
+=======
+          <Route path="/admin/intelligence" element={<Intelligence />} />
+>>>>>>> f3759bd (initial commit)
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

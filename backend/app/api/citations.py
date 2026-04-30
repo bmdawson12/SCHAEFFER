@@ -41,10 +41,34 @@ def build_filters(
             Citation.cited_in.ilike(f"%{search}%"),
             Citation.faculty.ilike(f"%{search}%"),
             Citation.short_research_tag.ilike(f"%{search}%"),
+<<<<<<< HEAD
+=======
+            Citation.publication_cited.ilike(f"%{search}%"),
+            Citation.publisher.ilike(f"%{search}%"),
+            Citation.policy_area.ilike(f"%{search}%"),
+>>>>>>> f3759bd (initial commit)
         ))
     return filters
 
 
+<<<<<<< HEAD
+=======
+SORTABLE_COLUMNS = {
+    "short_research_tag": Citation.short_research_tag,
+    "citation_type": Citation.citation_type,
+    "title_of_paper": Citation.title_of_paper,
+    "publication_cited": Citation.publication_cited,
+    "year_of_publication_cited": Citation.year_of_publication_cited,
+    "faculty": Citation.faculty,
+    "cited_in": Citation.cited_in,
+    "year_of_government_publication": Citation.year_of_government_publication,
+    "publisher": Citation.publisher,
+    "policy_area": Citation.policy_area,
+    "created_at": Citation.created_at,
+}
+
+
+>>>>>>> f3759bd (initial commit)
 @router.get("/", response_model=dict)
 async def list_citations(
     faculty: Optional[str] = None,
@@ -54,6 +78,11 @@ async def list_citations(
     year_gov: Optional[int] = None,
     year_pub: Optional[int] = None,
     search: Optional[str] = None,
+<<<<<<< HEAD
+=======
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    sort_dir: Optional[str] = Query("asc", description="asc or desc"),
+>>>>>>> f3759bd (initial commit)
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=500),
     db: AsyncSession = Depends(get_db),
@@ -66,7 +95,21 @@ async def list_citations(
     count_result = await db.execute(select(func.count()).select_from(query.subquery()))
     total = count_result.scalar()
 
+<<<<<<< HEAD
     query = query.order_by(Citation.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+=======
+    # Server-side sorting
+    if sort_by and sort_by in SORTABLE_COLUMNS:
+        col = SORTABLE_COLUMNS[sort_by]
+        if sort_dir == "desc":
+            query = query.order_by(col.desc().nulls_last())
+        else:
+            query = query.order_by(col.asc().nulls_last())
+    else:
+        query = query.order_by(Citation.created_at.desc())
+
+    query = query.offset((page - 1) * page_size).limit(page_size)
+>>>>>>> f3759bd (initial commit)
     result = await db.execute(query)
     items = result.scalars().all()
 

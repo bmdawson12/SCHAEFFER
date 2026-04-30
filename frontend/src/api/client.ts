@@ -71,9 +71,40 @@ export const statsApi = {
 
 // ── Ingestion ─────────────────────────────────────────────────────────────────
 
+<<<<<<< HEAD
+=======
+// ── Database IO ──────────────────────────────────────────────────────────────
+
+export const databaseApi = {
+  exportUrl: () => '/api/export-db',
+  importDb: (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    return api.post('/api/import-db', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+}
+
+// ── Ingestion ─────────────────────────────────────────────────────────────────
+
+>>>>>>> f3759bd (initial commit)
 export const ingestionApi = {
   run: (sourceIds?: number[]) =>
     api.post('/api/ingestion/run', { source_ids: sourceIds ?? null }),
   logs: () => api.get('/api/ingestion/logs'),
   status: () => api.get('/api/ingestion/status'),
 }
+<<<<<<< HEAD
+=======
+
+// ── Intelligence ─────────────────────────────────────────────────────────────
+
+export const intelligenceApi = {
+  report: () => api.get('/api/intelligence/report'),
+  sourceScores: () => api.get('/api/intelligence/source-scores'),
+  gaps: () => api.get('/api/intelligence/gaps'),
+  addSuggested: (domain: string, name?: string) =>
+    api.post('/api/intelligence/add-suggested-source', null, { params: { domain, name } }),
+}
+>>>>>>> f3759bd (initial commit)

@@ -14,6 +14,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime
 import logging
+<<<<<<< HEAD
+=======
+import asyncio
+>>>>>>> f3759bd (initial commit)
 
 import httpx
 from bs4 import BeautifulSoup
@@ -26,6 +30,139 @@ from .name_matcher import find_name_matches
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
+=======
+
+# ── Citation reference extraction ─────────────────────────────────────────────
+
+import re
+
+# Patterns to extract a paper title near a faculty name match.
+# Most government docs cite research in formats like:
+#   Goldman, D. et al. (2022). "Title of Paper." Journal Name.
+#   Goldman et al., "Title of Paper," Journal Name, 2022.
+#   See Goldman (2022), "Drug Pricing in the US," NBER Working Paper.
+
+_YEAR_RE = r'(?:19|20)\d{2}'
+# Quoted title
+_QUOTED_TITLE_RE = re.compile(
+    r'["\u201c]([^"\u201d]{10,200})["\u201d]', re.UNICODE
+)
+# APA-style: Author (Year). Title. Journal.
+_APA_TITLE_RE = re.compile(
+    r'\(' + _YEAR_RE + r'\)\.\s+([A-Z][^.]{10,200})\.')
+# Journal/publication names (common patterns after a title)
+_PUBLICATION_RE = re.compile(
+    r'(?:' + '|'.join([
+        r'(?:Journal|Review|Quarterly|Annals|American Economic|Health Affairs|'
+        r'JAMA|NBER|Lancet|BMJ|New England Journal|Econometrica|'
+        r'Brookings|AER|QJE|JPE|Science|Nature|PNAS|Health Economics|'
+        r'Medical Care|Health Services Research|Milbank|Inquiry|'
+        r'American Journal|Archives|Clinical|Proceedings|Working Paper|'
+        r'Policy Brief|Discussion Paper|Technical Report)'
+    ]) + r')[^,.\n]{0,80}',
+    re.IGNORECASE
+)
+# Year in parentheses near the match
+_YEAR_PAREN_RE = re.compile(r'\((' + _YEAR_RE + r')\)')
+
+
+def _extract_citation_details(text: str, match_text: str, faculty_name: str) -> dict:
+    """
+    Try to extract paper title, publication, and year from the text near
+    where the faculty name was matched.
+
+    Returns dict with optional keys: title_of_paper, publication_cited,
+    year_of_publication_cited
+    """
+    details = {}
+
+    # Use the matched_text snippet (already ~300 chars around the match)
+    snippet = match_text or ""
+    if len(snippet) < 50:
+        return details
+
+    # Try to find a quoted title
+    quoted = _QUOTED_TITLE_RE.search(snippet)
+    if quoted:
+        title = quoted.group(1).strip()
+        # Filter out obviously non-title quotes (too short, all caps headers, etc.)
+        if len(title) > 15 and not title.isupper():
+            details["title_of_paper"] = title
+
+    # Try APA-style title (after year in parens and period)
+    if "title_of_paper" not in details:
+        apa = _APA_TITLE_RE.search(snippet)
+        if apa:
+            details["title_of_paper"] = apa.group(1).strip()
+
+    # Try to find the publication/journal name
+    pub = _PUBLICATION_RE.search(snippet)
+    if pub:
+        pub_name = pub.group(0).strip().rstrip('.,;:')
+        if len(pub_name) > 5:
+            details["publication_cited"] = pub_name
+
+    # Try to find the year of the cited publication (not the gov doc year)
+    # Look for years in parentheses near the faculty name
+    years = _YEAR_PAREN_RE.findall(snippet)
+    if years:
+        # Pick the year closest to the faculty name position in the snippet
+        name_lower = faculty_name.lower().split()[-1]  # last name
+        name_pos = snippet.lower().find(name_lower)
+        best_year = None
+        best_dist = 9999
+        for y in years:
+            y_pos = snippet.find(f"({y})")
+            if y_pos >= 0:
+                dist = abs(y_pos - name_pos)
+                if dist < best_dist:
+                    best_dist = dist
+                    best_year = int(y)
+        if best_year:
+            details["year_of_publication_cited"] = best_year
+
+    return details
+
+
+# ── Policy area inference from source ─────────────────────────────────────────
+
+_SOURCE_POLICY_MAP = {
+    "congressional budget office": "Budget / Fiscal",
+    "cbo": "Budget / Fiscal",
+    "federal trade commission": "Financial Regulation",
+    "ftc": "Financial Regulation",
+    "medpac": "Medicare",
+    "medicare payment advisory": "Medicare",
+    "government accountability office": "Budget / Fiscal",
+    "gao": "Budget / Fiscal",
+    "ways and means": "Tax Policy",
+    "senate finance": "Tax Policy",
+    "joint economic committee": "Budget / Fiscal",
+    "health and human services": "Health Care",
+    "hhs": "Health Care",
+    "aspe": "Health Care",
+    "cms": "Medicare",
+    "centers for medicare": "Medicare",
+    "energy and commerce": "Health Care",
+    "senate help": "Health Care",
+    "senate aging": "Health Care",
+    "treasury": "Tax Policy",
+    "white house": "Health Care",
+    "national academy": "Health Care",
+}
+
+
+def _infer_policy_area(source_name: str) -> Optional[str]:
+    """Guess a policy area from the source name."""
+    sn = source_name.lower()
+    for key, area in _SOURCE_POLICY_MAP.items():
+        if key in sn:
+            return area
+    return None
+
+
+>>>>>>> f3759bd (initial commit)
 # ── Config flags ───────────────────────────────────────────────────────────────
 # Set ENABLE_GOOGLE_SEARCH = True to enable Phase 3 (Google search).
 # Keep it False by default — Google will block/rate-limit heavy use.
@@ -70,6 +207,7 @@ async def _is_duplicate(db: AsyncSession, faculty: str, url: str) -> bool:
 
 # ── Document processing ────────────────────────────────────────────────────────
 
+<<<<<<< HEAD
 async def _fetch_html_text(url: str) -> str:
     """
     Download a web page and return the visible text content.
@@ -94,6 +232,45 @@ async def _fetch_html_text(url: str) -> str:
     except Exception as e:
         logger.debug(f"  HTML fetch failed: {url[:80]}: {e}")
         return ""
+=======
+async def _fetch_html_text(url: str, retries: int = 2) -> str:
+    """
+    Download a web page and return the visible text content.
+    Strips nav/header/footer/script/style tags to get just the body.
+    Retries on transient failures (timeouts, 5xx).
+    Returns empty string on any failure.
+    """
+    for attempt in range(retries + 1):
+        try:
+            async with httpx.AsyncClient(
+                timeout=25, follow_redirects=True, headers=HTTP_HEADERS
+            ) as client:
+                resp = await client.get(url)
+                if resp.status_code >= 500 and attempt < retries:
+                    await asyncio.sleep(2 * (attempt + 1))
+                    continue
+                if resp.status_code != 200:
+                    return ""
+                content_type = resp.headers.get("content-type", "")
+                if "html" not in content_type:
+                    return ""
+                soup = BeautifulSoup(resp.text, "lxml")
+                # Remove boilerplate sections
+                for tag in soup.select("nav, header, footer, script, style, aside"):
+                    tag.decompose()
+                return soup.get_text(separator=" ", strip=True)
+        except httpx.TimeoutException:
+            if attempt < retries:
+                logger.debug(f"  HTML fetch timeout, retrying ({attempt+1}/{retries}): {url[:80]}")
+                await asyncio.sleep(2 * (attempt + 1))
+                continue
+            logger.debug(f"  HTML fetch timeout after {retries} retries: {url[:80]}")
+            return ""
+        except Exception as e:
+            logger.debug(f"  HTML fetch failed: {url[:80]}: {e}")
+            return ""
+    return ""
+>>>>>>> f3759bd (initial commit)
 
 
 async def _process_document(
@@ -148,6 +325,16 @@ async def _process_document(
         if await _is_duplicate(db, match["faculty"], url):
             continue
 
+<<<<<<< HEAD
+=======
+        # Try to extract paper title, publication, and year from matched text
+        cite_details = _extract_citation_details(
+            text, match.get("matched_text", ""), match["faculty"]
+        )
+        # Infer policy area from the source name
+        policy_area = _infer_policy_area(source_name)
+
+>>>>>>> f3759bd (initial commit)
         item = ReviewQueueItem(
             # Who was found
             faculty=match["faculty"],
@@ -157,6 +344,14 @@ async def _process_document(
             year_of_government_publication=doc.get("year"),
             publisher=doc.get("publisher") or source_name,
             link=url,
+<<<<<<< HEAD
+=======
+            # Auto-extracted citation details
+            title_of_paper=cite_details.get("title_of_paper"),
+            publication_cited=cite_details.get("publication_cited"),
+            year_of_publication_cited=cite_details.get("year_of_publication_cited"),
+            policy_area=policy_area,
+>>>>>>> f3759bd (initial commit)
             # Detection evidence
             matched_text=(match.get("matched_text") or "")[:2000],
             confidence_score=match["confidence_score"],
@@ -181,17 +376,40 @@ async def _process_document(
 async def run_ingestion_pipeline(
     db: AsyncSession,
     source_ids: Optional[list] = None,
+<<<<<<< HEAD
+=======
+    progress_cb=None,
+>>>>>>> f3759bd (initial commit)
 ) -> dict:
     """
     Run the full ingestion pipeline for all enabled sources (or a subset).
     Returns a summary dict with counts per phase.
     """
 
+<<<<<<< HEAD
     # ── Load sources ───────────────────────────────────────────────────────
     query = select(Source).where(Source.is_enabled == True)
     if source_ids:
         query = query.where(Source.id.in_(source_ids))
     sources = (await db.execute(query)).scalars().all()
+=======
+    # ── Load sources (in intelligence-optimized order) ──────────────────
+    query = select(Source).where(Source.is_enabled == True)
+    if source_ids:
+        query = query.where(Source.id.in_(source_ids))
+    sources_raw = (await db.execute(query)).scalars().all()
+
+    # Sort by intelligence priority if available
+    try:
+        from .intelligence import get_ingestion_priority_order
+        priority_ids = await get_ingestion_priority_order(db)
+        priority_map = {sid: idx for idx, sid in enumerate(priority_ids)}
+        sources = sorted(sources_raw, key=lambda s: priority_map.get(s.id, 9999))
+        logger.info(f"Sources ordered by intelligence priority")
+    except Exception:
+        sources = list(sources_raw)
+        logger.debug("Using default source order (intelligence unavailable)")
+>>>>>>> f3759bd (initial commit)
 
     if not sources:
         logger.warning("No enabled sources found — nothing to do")
@@ -219,6 +437,13 @@ async def run_ingestion_pipeline(
         f"Starting ingestion: {len(sources)} sources, {len(people)} people"
     )
 
+<<<<<<< HEAD
+=======
+    def _progress(**kw):
+        if progress_cb:
+            progress_cb(**kw)
+
+>>>>>>> f3759bd (initial commit)
     # Track counts per phase
     p1_docs = p1_matches = 0
     p2_docs = p2_matches = 0
@@ -228,8 +453,15 @@ async def run_ingestion_pipeline(
     # PHASE 1 — RSS feeds + shallow scrape (one log entry per source)
     # ══════════════════════════════════════════════════════════════════════
     logger.info(f"=== Phase 1: RSS/scrape ({len(sources)} sources) ===")
+<<<<<<< HEAD
 
     for source in sources:
+=======
+    _progress(phase="Phase 1: RSS/Scrape", sources_total=len(sources), sources_done=0)
+
+    for idx, source in enumerate(sources):
+        _progress(current_source=source.name, sources_done=idx)
+>>>>>>> f3759bd (initial commit)
         # Create a log entry so the UI can show progress
         log = IngestionLog(
             source_id=source.id,
@@ -281,6 +513,10 @@ async def run_ingestion_pipeline(
 
         p1_docs += docs_count
         p1_matches += matches_count
+<<<<<<< HEAD
+=======
+        _progress(sources_done=idx + 1, docs_checked=p1_docs, matches_found=p1_matches)
+>>>>>>> f3759bd (initial commit)
 
     logger.info(f"  Phase 1 done: {p1_docs} docs, {p1_matches} matches")
 
@@ -288,6 +524,10 @@ async def run_ingestion_pipeline(
     # PHASE 2 — Deep scraping (follows links inside high-value sources)
     # ══════════════════════════════════════════════════════════════════════
     logger.info("=== Phase 2: Deep scraping ===")
+<<<<<<< HEAD
+=======
+    _progress(phase="Phase 2: Deep Scrape", sources_done=0, current_source="")
+>>>>>>> f3759bd (initial commit)
 
     deep_log = IngestionLog(
         source_name="Deep Scraper",

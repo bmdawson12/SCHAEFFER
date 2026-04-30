@@ -5,7 +5,11 @@ from typing import Optional
 from datetime import datetime, timedelta
 
 from ..database import get_db
+<<<<<<< HEAD
 from ..models import Citation, ReviewQueueItem, Person, Source
+=======
+from ..models import Citation, ReviewQueueItem, Person, Source, IngestionLog
+>>>>>>> f3759bd (initial commit)
 from ..schemas import CitationOut
 
 router = APIRouter()
@@ -39,6 +43,26 @@ async def get_overview(db: AsyncSession = Depends(get_db)):
     )
     top_faculty = [{"faculty": r[0], "count": r[1]} for r in top_faculty_result]
 
+<<<<<<< HEAD
+=======
+    # Last ingestion run
+    last_ingestion_result = await db.execute(
+        select(IngestionLog)
+        .where(IngestionLog.status.in_(["completed", "failed"]))
+        .order_by(IngestionLog.completed_at.desc())
+        .limit(1)
+    )
+    last_ingestion_row = last_ingestion_result.scalar_one_or_none()
+    last_ingestion = None
+    if last_ingestion_row:
+        last_ingestion = {
+            "completed_at": last_ingestion_row.completed_at.isoformat() if last_ingestion_row.completed_at else None,
+            "status": last_ingestion_row.status,
+            "documents_checked": last_ingestion_row.documents_checked,
+            "matches_found": last_ingestion_row.matches_found,
+        }
+
+>>>>>>> f3759bd (initial commit)
     return {
         "total_citations": total_citations,
         "pending_review": pending_review,
@@ -46,6 +70,10 @@ async def get_overview(db: AsyncSession = Depends(get_db)):
         "total_sources": total_sources,
         "recent_citations": recent_citations,
         "top_faculty": top_faculty,
+<<<<<<< HEAD
+=======
+        "last_ingestion": last_ingestion,
+>>>>>>> f3759bd (initial commit)
     }
 
 
@@ -54,6 +82,7 @@ async def citations_over_time(
     period: Optional[str] = Query("12m", description="12m, 24m, or 5y"),
     db: AsyncSession = Depends(get_db),
 ):
+<<<<<<< HEAD
     now = datetime.utcnow()
 
     if period == "5y":
@@ -89,6 +118,45 @@ async def citations_over_time(
             cursor = cursor.replace(year=cursor.year + 1, month=1)
         else:
             cursor = cursor.replace(month=cursor.month + 1)
+=======
+    """
+    Return citation counts grouped by year_of_government_publication.
+    This shows when government documents cited our research, NOT when
+    we imported them into the database.
+    """
+    now = datetime.utcnow()
+
+    if period == "all":
+        start_year = None
+    elif period == "10y":
+        start_year = now.year - 10
+    elif period == "5y":
+        start_year = now.year - 5
+    else:  # 1y
+        start_year = now.year - 1
+
+    # Group by government publication year
+    query = (
+        select(
+            Citation.year_of_government_publication.label("yr"),
+            func.count(Citation.id).label("cnt"),
+        )
+        .where(Citation.year_of_government_publication.isnot(None))
+        .group_by(Citation.year_of_government_publication)
+        .order_by(Citation.year_of_government_publication)
+    )
+    if start_year is not None:
+        query = query.where(Citation.year_of_government_publication >= start_year)
+
+    result = await db.execute(query)
+    rows = result.all()
+
+    labels = []
+    data = []
+    for r in rows:
+        labels.append(str(int(r.yr)))
+        data.append(r.cnt)
+>>>>>>> f3759bd (initial commit)
 
     return {"labels": labels, "data": data}
 
@@ -101,9 +169,28 @@ async def get_filter_options(db: AsyncSession = Depends(get_db)):
     policy_areas = (await db.execute(select(Citation.policy_area).distinct().where(Citation.policy_area.isnot(None)).order_by(Citation.policy_area))).scalars().all()
     types = (await db.execute(select(Citation.citation_type).distinct().where(Citation.citation_type.isnot(None)).order_by(Citation.citation_type))).scalars().all()
 
+<<<<<<< HEAD
     return {
         "faculty": list(faculty),
         "publishers": list(publishers),
         "policy_areas": list(policy_areas),
         "types": list(types),
+=======
+    tags = (await db.execute(select(Citation.short_research_tag).distinct().where(Citation.short_research_tag.isnot(None)).order_by(Citation.short_research_tag))).scalars().all()
+    years_gov = (await db.execute(select(Citation.year_of_government_publication).distinct().where(Citation.year_of_government_publication.isnot(None)).order_by(Citation.year_of_government_publication.desc()))).scalars().all()
+    years_pub = (await db.execute(select(Citation.year_of_publication_cited).distinct().where(Citation.year_of_publication_cited.isnot(None)).order_by(Citation.year_of_publication_cited.desc()))).scalars().all()
+
+    # Filter out empty strings from all lists
+    def clean(lst):
+        return [x for x in lst if x and str(x).strip()]
+
+    return {
+        "faculty": clean(faculty),
+        "publishers": clean(publishers),
+        "policy_areas": clean(policy_areas),
+        "types": clean(types),
+        "tags": clean(tags),
+        "years_gov": [int(y) for y in years_gov if y],
+        "years_pub": [int(y) for y in years_pub if y],
+>>>>>>> f3759bd (initial commit)
     }

@@ -1,0 +1,53 @@
+CITATION MONITOR — USC Schaeffer Center
+========================================
+
+HOW TO START THE APP (takes ~1 minute the first time):
+
+   1. Double-click "Launch Citation Monitor.command"
+   2. If you see a security warning, do this once:
+         • Right-click the file → choose "Open" → click "Open" in the dialog
+         • (This only needs to be done the first time)
+   3. The app will open automatically in your browser at:
+         http://localhost:49292
+
+HOW TO STOP THE APP:
+
+   Close the Terminal window that opened.
+
+-----------------------------------------------------------
+
+THAT'S IT. No installs, no accounts, no downloads.
+The app runs on your Mac using software that's already
+installed (Python 3 comes with macOS).
+
+The first launch takes about a minute to set things up.
+Every launch after that starts in a few seconds.
+
+-----------------------------------------------------------
+
+SHARING UPDATES WITH OTHER COLLEAGUES
+
+After you add/review citations, you can share them with
+other colleagues who already have the app:
+
+   1. In the app, click the DOWNLOAD arrow (↓) in the top-right
+   2. This saves a file called "citations.db"
+   3. Email/Slack that file to your colleague
+   4. They click the UPLOAD arrow (↑) in their app and pick
+      the file — their app updates with your latest data.
+
+-----------------------------------------------------------
+
+TROUBLESHOOTING
+
+• "App can't be opened because it's from an unidentified developer"
+    → Right-click "Launch Citation Monitor.command" → Open
+       (you only need to do this once)
+
+• Nothing happens when I double-click the .command file
+    → Open Terminal, drag the citation-monitor folder into it,
+      then run:  ./start.sh
+
+• The app doesn't find new citations
+    → Make sure you have internet access and aren't on a VPN
+      that blocks government websites (*.gov)

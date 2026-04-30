@@ -263,6 +263,98 @@ DEEP_CONFIGS = {
         "max_pages": 25,
     },
 
+<<<<<<< HEAD
+=======
+    # ── House Oversight Committee ─────────────────────────────────────────
+    "oversight.house.gov": {
+        "start_urls": [
+            "https://oversight.house.gov/hearings",
+            "https://oversight.house.gov/reports",
+        ],
+        "link_patterns": [
+            r"\.pdf$",
+            r"/hearings/",
+            r"/reports/",
+        ],
+        "max_pages": 25,
+    },
+
+    # ── Senate Judiciary Committee ────────────────────────────────────────
+    "judiciary.senate.gov": {
+        "start_urls": [
+            "https://www.judiciary.senate.gov/hearings",
+        ],
+        "link_patterns": [
+            r"/imo/media/doc/.*\.pdf",
+            r"/hearings/",
+        ],
+        "max_pages": 20,
+    },
+
+    # ── Senate Budget Committee ───────────────────────────────────────────
+    "budget.senate.gov": {
+        "start_urls": [
+            "https://www.budget.senate.gov/hearings",
+        ],
+        "link_patterns": [
+            r"/imo/media/doc/.*\.pdf",
+            r"/hearings/",
+        ],
+        "max_pages": 20,
+    },
+
+    # ── Senate Commerce Committee ─────────────────────────────────────────
+    "commerce.senate.gov": {
+        "start_urls": [
+            "https://www.commerce.senate.gov/hearings",
+            "https://www.commerce.senate.gov/reports",
+        ],
+        "link_patterns": [
+            r"/services/files/.*",
+            r"/hearings/",
+            r"\.pdf$",
+        ],
+        "max_pages": 25,
+    },
+
+    # ── Senate Appropriations ─────────────────────────────────────────────
+    "appropriations.senate.gov": {
+        "start_urls": [
+            "https://www.appropriations.senate.gov/hearings",
+        ],
+        "link_patterns": [
+            r"/imo/media/doc/.*\.pdf",
+            r"/hearings/",
+        ],
+        "max_pages": 20,
+    },
+
+    # ── House Judiciary Committee ─────────────────────────────────────────
+    "judiciary.house.gov": {
+        "start_urls": [
+            "https://judiciary.house.gov/hearings",
+        ],
+        "link_patterns": [
+            r"\.pdf$",
+            r"/hearings/",
+            r"/calendar/",
+        ],
+        "max_pages": 20,
+    },
+
+    # ── California Health Benefits Review Program ─────────────────────────
+    "chbrp.org": {
+        "start_urls": [
+            "https://www.chbrp.org/completed-analyses",
+        ],
+        "link_patterns": [
+            r"\.pdf$",
+            r"/analyses/",
+        ],
+        "max_pages": 20,
+    },
+
+>>>>>>> f3759bd (initial commit)
 }
 
 

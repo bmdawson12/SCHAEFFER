@@ -1,8 +1,26 @@
+<<<<<<< HEAD
 from pydantic import BaseModel
+=======
+import re
+from pydantic import BaseModel, field_validator, model_validator
+>>>>>>> f3759bd (initial commit)
 from typing import Optional, List, Any
 from datetime import datetime
 
 
+<<<<<<< HEAD
+=======
+# Strip control characters (except newline/tab) that break JSON serialization
+_CONTROL_CHARS = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]')
+
+
+def _sanitize_str(v: Optional[str]) -> Optional[str]:
+    if v is None:
+        return v
+    return _CONTROL_CHARS.sub('', v)
+
+
+>>>>>>> f3759bd (initial commit)
 # ── Citation ──────────────────────────────────────────────────────────────────
 
 class CitationBase(BaseModel):
@@ -21,7 +39,16 @@ class CitationBase(BaseModel):
 
 
 class CitationCreate(CitationBase):
+<<<<<<< HEAD
     pass
+=======
+    @field_validator("faculty")
+    @classmethod
+    def faculty_not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("Faculty name must not be empty")
+        return v.strip()
+>>>>>>> f3759bd (initial commit)
 
 
 class CitationUpdate(BaseModel):
@@ -47,6 +74,20 @@ class CitationOut(CitationBase):
 
     model_config = {"from_attributes": True}
 
+<<<<<<< HEAD
+=======
+    @model_validator(mode="after")
+    def sanitize_strings(self):
+        """Strip control characters that break JSON serialization."""
+        for field_name in ["short_research_tag", "citation_type", "title_of_paper",
+                           "publication_cited", "faculty", "cited_in", "publisher",
+                           "link", "policy_area", "notes"]:
+            val = getattr(self, field_name, None)
+            if isinstance(val, str):
+                setattr(self, field_name, _sanitize_str(val))
+        return self
+
+>>>>>>> f3759bd (initial commit)
 
 # ── Review Queue ──────────────────────────────────────────────────────────────
 
@@ -74,6 +115,20 @@ class ReviewQueueItemOut(BaseModel):
 
     model_config = {"from_attributes": True}
 
+<<<<<<< HEAD
+=======
+    @model_validator(mode="after")
+    def sanitize_strings(self):
+        """Strip control characters that break JSON serialization."""
+        for field_name in ["short_research_tag", "citation_type", "title_of_paper",
+                           "publication_cited", "faculty", "cited_in", "publisher",
+                           "link", "policy_area", "notes", "matched_text"]:
+            val = getattr(self, field_name, None)
+            if isinstance(val, str):
+                setattr(self, field_name, _sanitize_str(val))
+        return self
+
+>>>>>>> f3759bd (initial commit)
 
 class ReviewQueueItemUpdate(BaseModel):
     short_research_tag: Optional[str] = None
@@ -100,6 +155,16 @@ class PersonCreate(BaseModel):
     department: Optional[str] = None
     is_active: Optional[bool] = True
 
+<<<<<<< HEAD
+=======
+    @field_validator("full_name")
+    @classmethod
+    def full_name_not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("Full name must not be empty")
+        return v.strip()
+
+>>>>>>> f3759bd (initial commit)
 
 class PersonUpdate(BaseModel):
     full_name: Optional[str] = None
@@ -109,6 +174,16 @@ class PersonUpdate(BaseModel):
     department: Optional[str] = None
     is_active: Optional[bool] = None
 
+<<<<<<< HEAD
+=======
+    @field_validator("full_name")
+    @classmethod
+    def full_name_not_empty(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None and not v.strip():
+            raise ValueError("Full name must not be empty")
+        return v.strip() if v else v
+
+>>>>>>> f3759bd (initial commit)
 
 class PersonOut(BaseModel):
     id: int
@@ -134,6 +209,26 @@ class SourceCreate(BaseModel):
     check_frequency: Optional[str] = "daily"
     config: Optional[dict] = {}
 
+<<<<<<< HEAD
+=======
+    @field_validator("name")
+    @classmethod
+    def name_not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("Source name must not be empty")
+        return v.strip()
+
+    @field_validator("url")
+    @classmethod
+    def url_not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("URL must not be empty")
+        v = v.strip()
+        if not v.startswith(("http://", "https://")):
+            raise ValueError("URL must start with http:// or https://")
+        return v
+
+>>>>>>> f3759bd (initial commit)
 
 class SourceUpdate(BaseModel):
     name: Optional[str] = None

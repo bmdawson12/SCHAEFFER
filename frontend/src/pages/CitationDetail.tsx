@@ -4,6 +4,10 @@ import toast from 'react-hot-toast'
 import { citationsApi } from '../api/client'
 import type { Citation } from '../types'
 import { format } from 'date-fns'
+<<<<<<< HEAD
+=======
+import { buildHighlightedUrl, openCitationLink } from '../utils/linkUtils'
+>>>>>>> f3759bd (initial commit)
 
 const FIELD_LABELS: { key: keyof Citation; label: string }[] = [
   { key: 'short_research_tag', label: 'Short Research Tag' },
@@ -62,7 +66,11 @@ export default function CitationDetail() {
   if (loading)
     return (
       <div className="flex justify-center items-center h-64">
+<<<<<<< HEAD
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+=======
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#990000]" />
+>>>>>>> f3759bd (initial commit)
       </div>
     )
 
@@ -93,7 +101,11 @@ export default function CitationDetail() {
               </button>
               <button
                 onClick={saveEdit}
+<<<<<<< HEAD
                 className="text-sm px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700"
+=======
+                className="text-sm px-3 py-1.5 rounded bg-[#990000] text-white hover:bg-[#7a0000]"
+>>>>>>> f3759bd (initial commit)
               >
                 Save
               </button>
@@ -145,10 +157,24 @@ export default function CitationDetail() {
                 )
               ) : key === 'link' && citation[key] ? (
                 <a
+<<<<<<< HEAD
                   href={citation[key] as string}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 hover:underline break-all"
+=======
+                  href={buildHighlightedUrl(citation[key] as string, citation.faculty)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 hover:underline break-all"
+                  title="Opens source and scrolls to where the faculty is mentioned"
+                  onClick={e => {
+                    e.preventDefault()
+                    openCitationLink(citation[key] as string, citation.faculty).then(({ isPdf }) => {
+                      if (isPdf) toast('\ud83d\udccb "' + citation.faculty + '" copied \u2014 press Ctrl+F in the PDF', { duration: 4000, icon: '\ud83d\udd0d' })
+                    })
+                  }}
+>>>>>>> f3759bd (initial commit)
                 >
                   {citation[key] as string}
                 </a>

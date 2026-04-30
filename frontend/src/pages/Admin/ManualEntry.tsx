@@ -78,7 +78,11 @@ export default function ManualEntry() {
     }
   }
 
+<<<<<<< HEAD
   const inp = 'w-full border border-gray-200 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400'
+=======
+  const inp = 'w-full border border-gray-200 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#990000]/20'
+>>>>>>> f3759bd (initial commit)
 
   return (
     <div className="max-w-3xl">
@@ -209,7 +213,11 @@ export default function ManualEntry() {
           <button
             type="submit"
             disabled={saving}
+<<<<<<< HEAD
             className="bg-blue-600 text-white px-5 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+=======
+            className="bg-[#990000] text-white px-5 py-2 rounded text-sm hover:bg-[#7a0000] disabled:opacity-50"
+>>>>>>> f3759bd (initial commit)
           >
             {saving ? 'Saving…' : 'Save Citation'}
           </button>
